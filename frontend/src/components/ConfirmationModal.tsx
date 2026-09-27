@@ -20,9 +20,9 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
   const isHighRisk = action.risk_level === 'HIGH';
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-150">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-100 dark:bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-150">
       <div className={`w-full max-w-lg glass-panel p-6 rounded-2xl border shadow-2xl space-y-5 ${
-        isHighRisk ? 'border-red-500/50 bg-slate-900/95' : 'border-amber-500/50 bg-slate-900/95'
+        isHighRisk ? 'border-red-500/50 bg-white dark:bg-slate-900/95' : 'border-amber-500/50 bg-white dark:bg-slate-900/95'
       }`}>
         {/* Header */}
         <div className="flex items-center gap-3">
@@ -36,16 +36,16 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
               }`}>
                 {action.risk_level} RISK LEVEL
               </span>
-              <span className="text-xs text-slate-400 font-mono">ID: {action.id}</span>
+              <span className="text-xs text-slate-500 dark:text-slate-400 font-mono">ID: {action.id}</span>
             </div>
-            <h3 className="text-base font-bold text-white mt-1">
+            <h3 className="text-base font-bold text-slate-900 dark:text-white mt-1">
               HUMAN AUTHORIZATION REQUIRED
             </h3>
           </div>
         </div>
 
         {/* Action Details */}
-        <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-2.5 text-xs font-mono">
+        <div className="p-4 rounded-xl bg-slate-100 dark:bg-slate-950/80 border border-slate-300 dark:border-slate-800 space-y-2.5 text-xs font-mono">
           <div>
             <span className="text-slate-500 block text-[10px] uppercase">RECOMMENDED ACTION:</span>
             <span className="text-sm font-bold text-cyan-400">
@@ -55,12 +55,12 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
 
           <div>
             <span className="text-slate-500 block text-[10px] uppercase">OPERATIONAL REASON:</span>
-            <span className="text-slate-200 leading-relaxed block">{action.reason}</span>
+            <span className="text-slate-700 dark:text-slate-200 leading-relaxed block">{action.reason}</span>
           </div>
 
-          <div className="pt-2 border-t border-slate-900 flex items-center justify-between text-slate-400">
+          <div className="pt-2 border-t border-slate-200 dark:border-slate-900 flex items-center justify-between text-slate-500 dark:text-slate-400">
             <span>TRIGGERED BY:</span>
-            <span className="text-white font-bold">{action.created_by}</span>
+            <span className="text-slate-900 dark:text-white font-bold">{action.created_by}</span>
           </div>
         </div>
 
@@ -74,7 +74,7 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
           <button
             onClick={onConfirm}
             disabled={loading}
-            className={`flex-1 py-3 px-4 rounded-xl text-xs font-bold text-white transition-all shadow-lg flex items-center justify-center gap-2 ${
+            className={`flex-1 py-3 px-4 rounded-xl text-xs font-bold text-slate-900 dark:text-white transition-all shadow-lg flex items-center justify-center gap-2 ${
               isHighRisk
                 ? 'bg-red-600 hover:bg-red-500 shadow-glow-red'
                 : 'bg-emerald-600 hover:bg-emerald-500'
@@ -86,7 +86,7 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
           <button
             onClick={onCancel}
             disabled={loading}
-            className="py-3 px-5 rounded-xl text-xs font-semibold text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 transition-all border border-slate-700"
+            className="py-3 px-5 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:text-white bg-slate-200 dark:bg-slate-800 hover:bg-slate-700 transition-all border border-slate-300 dark:border-slate-700"
           >
             CANCEL
           </button>

@@ -201,6 +201,7 @@ export interface CollaborationItem {
   status: string;
   contact: string;
   notes: string;
+  active_since?: string;
 }
 
 export interface IndustrialEvent {
@@ -211,4 +212,6 @@ export interface IndustrialEvent {
   zone_id?: string;
   machine_id?: string;
   status: string;
+  priority?: 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW';
+  description?: string;
 }

@@ -114,7 +114,7 @@ export const IndustrialEquipment: React.FC<IndustrialEquipmentProps> = ({
 
         {m04Alert && (
           <Html position={[0, 6.0, 0]} center distanceFactor={16}>
-            <div className="flex items-center gap-1.5 px-3.5 py-1.5 bg-red-600 text-white rounded-full text-xs font-extrabold shadow-glow-red animate-bounce border-2 border-white font-mono">
+            <div className="flex items-center gap-1.5 px-3.5 py-1.5 bg-red-600 text-slate-900 dark:text-white rounded-full text-xs font-extrabold shadow-glow-red animate-bounce border-2 border-white font-mono">
               <AlertTriangle className="w-4 h-4 text-yellow-300" />
               <span>CRITICAL OVERHEATING</span>
             </div>

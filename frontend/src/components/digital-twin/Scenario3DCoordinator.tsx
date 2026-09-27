@@ -165,11 +165,11 @@ export const Scenario3DCoordinator: React.FC<Scenario3DCoordinatorProps> = ({
           {/* 3D Floating Tactical Banner */}
           <Html position={[0, 6.5, 0]} center distanceFactor={22}>
             <div className="flex flex-col items-center gap-1 pointer-events-none select-none">
-              <div className="flex items-center gap-2 px-3 py-1.5 bg-red-600/90 backdrop-blur-md text-white font-mono text-xs font-bold rounded-lg border border-red-400 shadow-glow-red animate-pulse">
+              <div className="flex items-center gap-2 px-3 py-1.5 bg-red-600/90 backdrop-blur-md text-slate-900 dark:text-white font-mono text-xs font-bold rounded-lg border border-red-400 shadow-glow-red animate-pulse">
                 <AlertTriangle className="w-4 h-4 text-yellow-300" />
                 <span>THERMAL RUNAWAY: M-04 [89.4°C]</span>
               </div>
-              <div className="px-2 py-0.5 bg-slate-950/90 text-cyan-300 font-mono text-[10px] rounded border border-cyan-500/40">
+              <div className="px-2 py-0.5 bg-slate-100 dark:bg-slate-950/90 text-cyan-300 font-mono text-[10px] rounded border border-cyan-500/40">
                 {isActionAuthorized ? 'COOLANT INJECTION: ACTIVE' : 'AI COPILOT: EMERGENCY COOLANT PROPOSED'}
               </div>
             </div>
@@ -225,11 +225,11 @@ export const Scenario3DCoordinator: React.FC<Scenario3DCoordinatorProps> = ({
           {/* 3D Floating Tactical Banner */}
           <Html position={[0, 6.2, 0]} center distanceFactor={22}>
             <div className="flex flex-col items-center gap-1 pointer-events-none select-none">
-              <div className="flex items-center gap-2 px-3 py-1.5 bg-purple-600/90 backdrop-blur-md text-white font-mono text-xs font-bold rounded-lg border border-purple-400 shadow-lg animate-pulse">
+              <div className="flex items-center gap-2 px-3 py-1.5 bg-purple-600/90 backdrop-blur-md text-slate-900 dark:text-white font-mono text-xs font-bold rounded-lg border border-purple-400 shadow-lg animate-pulse">
                 <ShieldAlert className="w-4 h-4 text-purple-200" />
                 <span>UNAUTHORIZED PLC PACKET INTRUSION</span>
               </div>
-              <div className="px-2 py-0.5 bg-slate-950/90 text-purple-300 font-mono text-[10px] rounded border border-purple-500/40">
+              <div className="px-2 py-0.5 bg-slate-100 dark:bg-slate-950/90 text-purple-300 font-mono text-[10px] rounded border border-purple-500/40">
                 {isActionAuthorized ? 'AIR-GAP QUARANTINE: ENFORCED' : 'AI THREAT MESH: VLAN ISOLATION PROPOSED'}
               </div>
             </div>
@@ -317,11 +317,11 @@ export const Scenario3DCoordinator: React.FC<Scenario3DCoordinatorProps> = ({
           {/* 3D Floating Tactical Banner */}
           <Html position={[0, 7.5, 0]} center distanceFactor={24}>
             <div className="flex flex-col items-center gap-1.5 pointer-events-none select-none">
-              <div className="flex items-center gap-2 px-3.5 py-2 bg-red-700 text-white font-mono text-xs font-black rounded-lg border-2 border-white shadow-glow-red animate-bounce">
+              <div className="flex items-center gap-2 px-3.5 py-2 bg-red-700 text-slate-900 dark:text-white font-mono text-xs font-black rounded-lg border-2 border-white shadow-glow-red animate-bounce">
                 <Flame className="w-5 h-5 text-yellow-300 animate-pulse" />
                 <span>ACTIVE FACTORY FIRE • ZONE B</span>
               </div>
-              <div className="px-3 py-1 bg-slate-950/95 text-emerald-400 font-mono text-[11px] font-bold rounded-full border border-emerald-500/50 flex items-center gap-1.5">
+              <div className="px-3 py-1 bg-slate-100 dark:bg-slate-950/95 text-emerald-400 font-mono text-[11px] font-bold rounded-full border border-emerald-500/50 flex items-center gap-1.5">
                 <CheckCircle className="w-3.5 h-3.5" />
                 <span>EVACUATION ROUTE CLEAR • SPRINKLERS {isActionAuthorized ? 'ACTIVE' : 'READY'}</span>
               </div>

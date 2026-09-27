@@ -20,7 +20,7 @@ export const Header: React.FC<HeaderProps> = ({ activeAlertCount }) => {
   };
 
   return (
-    <header className="h-16 px-6 glass-panel border-b border-slate-200 dark:border-slate-800 flex items-center justify-between z-30 select-none bg-white/80 dark:bg-[#080d1a]/80 backdrop-blur-md">
+    <header className="h-16 px-6 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between z-30 select-none bg-white/90 dark:bg-[#080d1a]/90 backdrop-blur-xl">
       {/* Brand & Identity */}
       <div className="flex items-center gap-3">
         <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-glow-cyan">
@@ -28,29 +28,29 @@ export const Header: React.FC<HeaderProps> = ({ activeAlertCount }) => {
         </div>
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-sm font-extrabold text-white tracking-wider font-mono">
+            <h1 className="text-sm font-extrabold text-slate-900 dark:text-white tracking-wider font-mono">
               AI INDUSTRIAL COPILOT
             </h1>
             <span className="px-1.5 py-0.5 text-[9px] font-mono font-bold bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 rounded">
               v1.0 MVP
             </span>
           </div>
-          <span className="text-[11px] text-slate-400 font-mono">
+          <span className="text-[11px] text-slate-500 dark:text-slate-400 font-mono">
             Autonomous Plant Sentinel & Tactical Decision Mesh
           </span>
         </div>
       </div>
 
       {/* Center Welcome Greeting as specified */}
-      <div className="hidden md:flex items-center gap-2 px-4 py-1.5 bg-slate-900/80 rounded-full border border-slate-800 text-xs font-mono">
+      <div className="hidden md:flex items-center gap-2 px-4 py-1.5 bg-white dark:bg-slate-900/80 rounded-full border border-slate-300 dark:border-slate-800 text-xs font-mono">
         <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
-        <span className="text-slate-400">Welcome,</span>
-        <strong className="text-white">Mr. X (Plant Director)</strong>
+        <span className="text-slate-500 dark:text-slate-400">Welcome,</span>
+        <strong className="text-slate-900 dark:text-white">Mr. X (Plant Director)</strong>
       </div>
 
       {/* Right Telemetry Status & Clock */}
       <div className="flex items-center gap-4 text-xs font-mono">
-        <div className="hidden lg:flex items-center gap-2 px-3 py-1 bg-slate-900/60 rounded border border-slate-800 text-slate-300">
+        <div className="hidden lg:flex items-center gap-2 px-3 py-1 bg-white dark:bg-slate-900/60 rounded border border-slate-300 dark:border-slate-800 text-slate-600 dark:text-slate-300">
           <Activity className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
           <span>SENSE → REASON → ACT</span>
         </div>
@@ -69,12 +69,12 @@ export const Header: React.FC<HeaderProps> = ({ activeAlertCount }) => {
           )}
         </div>
 
-        <div className="text-slate-400 border-l border-slate-800 pl-3">
+        <div className="text-slate-500 dark:text-slate-400 border-l border-slate-300 dark:border-slate-800 pl-3">
           {time}
         </div>
         <button
           onClick={toggleTheme}
-          className="ml-2 p-1.5 rounded-md hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition-colors"
+          className="ml-2 p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 transition-colors border border-transparent hover:border-slate-200 dark:hover:border-slate-700"
           title="Toggle Light/Dark Mode"
         >
           {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}

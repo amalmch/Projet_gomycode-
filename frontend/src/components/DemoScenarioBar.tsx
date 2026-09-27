@@ -13,9 +13,9 @@ export const DemoScenarioBar: React.FC<DemoScenarioBarProps> = ({
   onReset,
 }) => {
   return (
-    <div className="h-11 px-4 glass-panel border-b border-slate-800/90 flex items-center justify-between text-xs font-mono select-none">
+    <div className="h-11 px-4 glass-panel border-b border-slate-300 dark:border-slate-800/90 flex items-center justify-between text-xs font-mono select-none">
       <div className="flex items-center gap-2">
-        <span className="text-slate-400 font-bold flex items-center gap-1.5">
+        <span className="text-slate-500 dark:text-slate-400 font-bold flex items-center gap-1.5">
           <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
           <span>JURY DEMO SCENARIO DRIVER:</span>
         </span>
@@ -27,7 +27,7 @@ export const DemoScenarioBar: React.FC<DemoScenarioBarProps> = ({
           className={`px-3 py-1 rounded-md text-xs font-semibold flex items-center gap-1.5 transition-all ${
             currentScenario === 'normal'
               ? 'bg-emerald-600/30 text-emerald-300 border border-emerald-500/50 shadow-sm'
-              : 'bg-slate-900/60 text-slate-400 hover:text-white border border-slate-800'
+              : 'bg-white dark:bg-slate-900/60 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white border border-slate-300 dark:border-slate-800'
           }`}
         >
           <span className="w-2 h-2 rounded-full bg-emerald-400" />
@@ -39,7 +39,7 @@ export const DemoScenarioBar: React.FC<DemoScenarioBarProps> = ({
           className={`px-3 py-1 rounded-md text-xs font-semibold flex items-center gap-1.5 transition-all ${
             currentScenario === 'machine_overheating'
               ? 'bg-red-600/40 text-red-300 border border-red-500/60 shadow-glow-red animate-pulse'
-              : 'bg-slate-900/60 text-slate-400 hover:text-white border border-slate-800'
+              : 'bg-white dark:bg-slate-900/60 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white border border-slate-300 dark:border-slate-800'
           }`}
         >
           <AlertTriangle className="w-3.5 h-3.5 text-red-400" />
@@ -51,7 +51,7 @@ export const DemoScenarioBar: React.FC<DemoScenarioBarProps> = ({
           className={`px-3 py-1 rounded-md text-xs font-semibold flex items-center gap-1.5 transition-all ${
             currentScenario === 'cybersecurity'
               ? 'bg-purple-600/40 text-purple-300 border border-purple-500/60 shadow-sm animate-pulse'
-              : 'bg-slate-900/60 text-slate-400 hover:text-white border border-slate-800'
+              : 'bg-white dark:bg-slate-900/60 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white border border-slate-300 dark:border-slate-800'
           }`}
         >
           <ShieldAlert className="w-3.5 h-3.5 text-purple-400" />
@@ -63,7 +63,7 @@ export const DemoScenarioBar: React.FC<DemoScenarioBarProps> = ({
           className={`px-3 py-1 rounded-md text-xs font-semibold flex items-center gap-1.5 transition-all ${
             currentScenario === 'fire'
               ? 'bg-amber-600/40 text-amber-300 border border-amber-500/60 shadow-sm animate-pulse'
-              : 'bg-slate-900/60 text-slate-400 hover:text-white border border-slate-800'
+              : 'bg-white dark:bg-slate-900/60 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white border border-slate-300 dark:border-slate-800'
           }`}
         >
           <Flame className="w-3.5 h-3.5 text-amber-400" />
@@ -73,7 +73,7 @@ export const DemoScenarioBar: React.FC<DemoScenarioBarProps> = ({
         <button
           onClick={onReset}
           title="Reset factory state"
-          className="p-1 px-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-md text-xs transition-colors flex items-center gap-1 border border-slate-700 ml-2"
+          className="p-1 px-2.5 bg-slate-200 dark:bg-slate-800 hover:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-md text-xs transition-colors flex items-center gap-1 border border-slate-300 dark:border-slate-700 ml-2"
         >
           <RotateCcw className="w-3.5 h-3.5" />
           <span>Reset</span>
