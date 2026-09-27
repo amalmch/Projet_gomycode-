@@ -8,7 +8,9 @@ from ai.observation_window import ObservationWindow
 from ai.agents.temperature_agent import TemperatureAgent
 from ai.agents.machine_agent import MachineAgent
 from ai.agents.worker_agent import WorkerAgent
+from ai import agent_bus_auth
 from ai.agents.cyber_agent import CybersecurityAgent
+from ai.agents.weather_agent import WeatherAgent
 from ai.agents.recommendation_agent import RecommendationAgent, SEVERITY_RANK
 from app.services.state_store import state
 from app.models.schemas import Incident, Action, ActionStatus, EvidenceItem, RiskAssessment, Severity
@@ -39,6 +41,7 @@ class AgentOrchestrator:
         self.machine_agent = MachineAgent()
         self.worker_agent = WorkerAgent()
         self.cyber_agent = CybersecurityAgent()
+        self.weather_agent = WeatherAgent()
         self.rec_agent = RecommendationAgent()
         # Kept for backwards compatibility with anything reading it.
         self.recent_observations: List[Dict[str, Any]] = []
@@ -117,6 +120,13 @@ class AgentOrchestrator:
             observations.append(c_obs)
             self._log_agent_step(self.cyber_agent.agent_id, [event_type], c_obs["observation"], c_obs["decision"])
 
+        # 3b. Weather agent: the predictive one, on forecast events
+        w_forecast = await self.weather_agent.process_event(event)
+        if w_forecast:
+            observations.append(w_forecast)
+            self._log_agent_step(self.weather_agent.agent_id, [event_type],
+                                 w_forecast["observation"], w_forecast["decision"])
+
         # 4. Worker agent: exposure assessment for whatever the other agents saw
         w_obs = await self.worker_agent.process_event(event)
         if w_obs:
@@ -124,6 +134,17 @@ class AgentOrchestrator:
             self._log_agent_step(self.worker_agent.agent_id, ["HAZARD_ALERT"], w_obs["observation"], w_obs["decision"])
 
         self._refresh_agent_cards()
+
+        # 4b. Authenticate what the agents just said, before any of it becomes evidence.
+        #     Our own agents sign as they are collected; anything that arrived on the bus from
+        #     somewhere else has no valid tag and is dropped here (ai/agent_bus_auth.py).
+        for observation in observations:
+            if not observation.get("agent_attack"):
+                agent_bus_auth.sign(observation)
+        for raised in self.cyber_agent.screen_observations(observations, zone=event_zone):
+            observations.append(raised)
+            self._log_agent_step(self.cyber_agent.agent_id, [event_type],
+                                 raised["observation"], raised["decision"])
 
         if not observations:
             return
@@ -148,6 +169,7 @@ class AgentOrchestrator:
         state.agents["machine_agent"] = self.machine_agent
         state.agents["worker_agent"] = self.worker_agent
         state.agents["cyber_agent"] = self.cyber_agent
+        state.agents["weather_agent"] = self.weather_agent
         state.agents["recommendation_agent"] = self.rec_agent
 
     def _log_agent_step(self, agent_id: str, inputs: List[str], reasoning: str, decision: str, actions: List[str] = None):

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Cpu, ShieldCheck, Bell, Activity, User, Moon, Sun } from 'lucide-react';
+import { Cpu, ShieldCheck, Bell, Activity, User, Moon, Sun, LogOut } from 'lucide-react';
+import { getUser, logout } from '../services/auth';
 
 interface HeaderProps {
   activeAlertCount: number;
@@ -29,7 +30,7 @@ export const Header: React.FC<HeaderProps> = ({ activeAlertCount }) => {
         <div>
           <div className="flex items-center gap-2">
             <h1 className="text-sm font-extrabold text-slate-900 dark:text-white tracking-wider font-mono">
-              AI INDUSTRIAL COPILOT
+              Industrial_Copilot
             </h1>
             <span className="px-1.5 py-0.5 text-[9px] font-mono font-bold bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 rounded">
               v1.0 MVP
@@ -41,11 +42,35 @@ export const Header: React.FC<HeaderProps> = ({ activeAlertCount }) => {
         </div>
       </div>
 
-      {/* Center Welcome Greeting as specified */}
-      <div className="hidden md:flex items-center gap-2 px-4 py-1.5 bg-white dark:bg-slate-900/80 rounded-full border border-slate-300 dark:border-slate-800 text-xs font-mono">
-        <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
-        <span className="text-slate-500 dark:text-slate-400">Welcome,</span>
-        <strong className="text-slate-900 dark:text-white">Mr. X (Plant Director)</strong>
+      {/* Signed-in user (real session) + sign out */}
+      <div className="hidden md:flex items-center gap-3">
+        <div className="flex items-center gap-2 px-4 py-1.5 bg-white dark:bg-slate-900/80 rounded-full border border-slate-300 dark:border-slate-800 text-xs font-mono">
+          <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
+          <span className="text-slate-500 dark:text-slate-400">Welcome,</span>
+          <strong className="text-slate-900 dark:text-white">
+            {getUser()?.display_name || getUser()?.username || 'Mr. X'}
+          </strong>
+          <span className="text-slate-500 dark:text-slate-500">
+            ({getUser()?.job_title || getUser()?.role || 'Plant Director'})
+          </span>
+          <span className={`ml-1 px-1.5 py-0.5 rounded text-[9px] font-bold border ${
+            (getUser()?.role === 'owner' || !getUser())
+              ? 'bg-cyan-500/20 text-cyan-600 dark:text-cyan-300 border-cyan-500/30'
+              : 'bg-slate-200 dark:bg-slate-700/40 text-slate-600 dark:text-slate-300 border-slate-300 dark:border-slate-600/40'}`}>
+            {(getUser()?.role === 'owner' || !getUser()) ? 'CAN AUTHORIZE' : 'READ-ONLY'}
+          </span>
+        </div>
+        <button
+          onClick={() => {
+            logout('You signed out.');
+            window.location.reload(); // Refresh to trigger our custom login screen if needed
+          }}
+          title="Sign out"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-900/80 text-[11px] font-mono text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:border-cyan-500 transition-colors"
+        >
+          <LogOut className="w-3.5 h-3.5" />
+          SIGN OUT
+        </button>
       </div>
 
       {/* Right Telemetry Status & Clock */}

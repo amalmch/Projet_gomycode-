@@ -133,6 +133,25 @@ async def receive_enrichment(incident_id: str, body: EnrichmentRequest):
         "recommended_action_ids": list(body.recommended_action_ids),
         "sources": list(body.sources),
     }
+    # ---- the LLM channel is untrusted input (item B) ---------------------------------------
+    # This text is written by a language model that has just read a document corpus and an
+    # incident payload. Before it is cached, shown, or allowed to name actions, it is scanned for
+    # instruction injection. Rejecting it here keeps the deterministic reasoning the agents
+    # produced, which is complete on its own — the enrichment is an improvement, never a
+    # dependency. Note the order: the scan runs BEFORE llm_cache.remember(), so a poisoned answer
+    # cannot be stored and replayed on stage later.
+    from ai.agents.cyber_agent import CybersecurityAgent
+
+    narrative = " ".join(str(part) for part in
+                         [fields["what"], fields["impact"], fields["prediction"]] + list(fields["why"]))
+    injection = CybersecurityAgent().screen_llm_text(narrative, where="n8n enrichment")
+    if injection:
+        _log("cyber_agent", ["LLM_ENRICHMENT"],
+             f"Rejected the enrichment for {incident_id}: the text {injection}. The deterministic "
+             f"reasoning stands; nothing from this answer was cached or shown.",
+             "REJECT the n8n enrichment.")
+        raise HTTPException(status_code=422, detail=f"enrichment rejected: {injection}")
+
     provenance_source = "template fallback" if body.fallback else body.produced_by
     replayed_from = None
 
@@ -190,6 +209,14 @@ async def receive_enrichment(incident_id: str, body: EnrichmentRequest):
         + (f", rejected: {', '.join(r['id'] for r in rejected)}" if rejected else "")
     )
 
+    # Two lines belong to the agents, not to the model: the forecast arithmetic and the lead time
+    # on a predictive incident. The enrichment rewrites the narrative, and an LLM has no way to
+    # reproduce either, so they are carried across instead of being lost. Without this the storm
+    # incident stops stating how long there is to act, which is the only thing that makes it
+    # actionable (docs/ai/DEMO.md 4b tells the operator to read exactly those lines).
+    carried = [line for line in (incident.ai_reasoning or "").splitlines()
+               if line.startswith(("FORECAST BASIS:", "LEAD TIME:"))]
+
     incident.ai_reasoning = (
         f"WHAT: {fields['what'] or incident.type.replace('_', ' ').title()}\n"
         f"WHY: {why_lines}\n"
@@ -202,6 +229,8 @@ async def receive_enrichment(incident_id: str, body: EnrichmentRequest):
         f"SOURCES: {sources_text or 'none cited'}\n"
         f"— enriched by {provenance}"
     )
+    if carried:
+        incident.ai_reasoning += "\n" + "\n".join(carried)
 
     n8n_client.mark_enriched(incident_id)
 

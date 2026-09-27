@@ -132,6 +132,69 @@ class CommandEngine:
                 state.sensors["TEMP-B-01"].status = Severity.INFO
             checks.append({"check": "Coolant circulation pump flow rate 45 L/min verified", "passed": True})
 
+        # ---- severe weather preparation (item A). Effects are visible in the machine
+        # ---- parameters, which is the point: the plant is measurably safer before the storm.
+        elif action.action_type == "LOAD_SHEDDING":
+            shed = []
+            for machine in state.machines.values():
+                rpm = machine.parameters.get("rpm")
+                energy = machine.parameters.get("energy")
+                rate = machine.parameters.get("production_rate")
+                if rpm is not None:
+                    rpm.value = round(rpm.value * 0.6, 1)
+                if energy is not None:
+                    energy.value = round(energy.value * 0.6, 1)
+                if rate is not None:
+                    rate.value = round(rate.value * 0.6, 1)
+                shed.append(machine.id)
+            checks.append({"check": f"Non-critical load shed; {len(shed)} machines derated to 60% "
+                                    f"({', '.join(shed)})", "passed": True})
+            checks.append({"check": "Site electrical load reduced ahead of the front", "passed": True})
+
+        elif action.action_type == "REDUCE_PRESSURE_SETPOINT":
+            lowered = []
+            for machine in state.machines.values():
+                pressure = machine.parameters.get("pressure")
+                if pressure is None:
+                    continue
+                if target in (machine.id, "ALL") or target not in state.machines:
+                    pressure.value = min(pressure.value, 6.5)
+                    lowered.append(machine.id)
+                elif machine.id == target:
+                    pressure.value = min(pressure.value, 6.5)
+                    lowered.append(machine.id)
+            checks.append({"check": f"Pressure setpoint lowered to 6.5 bar on "
+                                    f"{', '.join(lowered) or target}, margin to the 8.0 bar limit "
+                                    f"widened to 1.5 bar", "passed": True})
+
+        elif action.action_type == "SWITCH_TO_UPS":
+            checks.append({"check": "PLCs and the Modbus gateway transferred to UPS-MAIN-01",
+                           "passed": True})
+            checks.append({"check": "Backup generator readiness verified (fuel, auto-start)",
+                           "passed": True})
+
+        elif action.action_type == "REINFORCE_ELECTRICAL_CREW":
+            checks.append({"check": f"On-call electrical crew called to {target}; 2 technicians "
+                                    f"acknowledged", "passed": True})
+
+        # ---- the copilot defending itself (item B) ----------------------------------
+        elif action.action_type == "QUARANTINE_AGENT":
+            from ai import agent_bus_auth, risk_engine as risk
+            quarantined = sorted(getattr(state, "quarantined_agents", set()))
+            checks.append({"check": f"Message bus quarantine active; unsigned or badly signed "
+                                    f"messages are dropped at the boundary", "passed": True})
+            checks.append({"check": f"Agents currently down-weighted to "
+                                    f"{agent_bus_auth.COMPROMISED_TRUST:.1f}: "
+                                    f"{', '.join(sorted(risk.TRUST)) or 'none'}"
+                                    + (f"; quarantined: {', '.join(quarantined)}" if quarantined else ""),
+                           "passed": True})
+
+        elif action.action_type == "REQUIRE_HUMAN_AUTHORISATION":
+            state.autonomy_suspended = True
+            checks.append({"check": "Autonomous execution suspended: every action now waits for an "
+                                    "owner, including the ones normally allowed to auto-execute",
+                           "passed": True})
+
         elif action.action_type == "ISOLATE_DEVICE":
             checks.append({"check": f"Switch port 14 isolated, rogue MAC {target} blacklisted", "passed": True})
 

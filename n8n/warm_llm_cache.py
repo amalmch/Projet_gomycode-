@@ -18,6 +18,10 @@ import sys
 import time
 import urllib.error
 import urllib.request
+import pathlib
+
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+from _auth import auth_headers  # noqa: E402
 
 BACKEND = "http://127.0.0.1:8000"
 
@@ -25,13 +29,16 @@ SCENARIOS = [
     ("machine_overheating", "MACHINE_OVERHEATING", 14),
     ("fire", "INDUSTRIAL_FIRE", 14),
     ("cybersecurity", "CYBER_INTRUSION", 9),
+    # The predictive one. Its incident is raised while the forecast is still firming up, well
+    # before the strike at tick 25, so it needs less waiting than the reactive scenarios.
+    ("storm_forecast", "SEVERE_WEATHER_RISK", 8),
 ]
 
 
 def call(method, path, body=None):
     data = json.dumps(body).encode() if body is not None else None
     req = urllib.request.Request(BACKEND + path, data=data, method=method,
-                                 headers={"Content-Type": "application/json"})
+                                 headers={"Content-Type": "application/json", **auth_headers()})
     try:
         with urllib.request.urlopen(req, timeout=30) as response:
             raw = response.read().decode()
@@ -109,8 +116,8 @@ def main():
         print(f"  {key:<22} {entry.get('produced_by')} at {entry.get('cached_at')}")
         print(f"                         actions={entry.get('action_ids')} sources={entry.get('sources')}")
     missing = {t for _, t, _ in SCENARIOS} - set(status.get("types_cached", []))
-    print(f"\nwarmed: {len(status.get('types_cached', []))}/3" +
-          (f"  still missing: {sorted(missing)}" if missing else "  (all three)"))
+    print(f"\nwarmed: {len(status.get('types_cached', []))}/{len(SCENARIOS)}" +
+          (f"  still missing: {sorted(missing)}" if missing else "  (all of them)"))
     return 0
 
 

@@ -13,7 +13,6 @@ import { MultiAgentView } from './components/ai/MultiAgentView';
 import { IoTCommandView } from './components/ai/IoTCommandView';
 import { DigitalTwinView } from './components/ai/DigitalTwinView';
 import { RagChatbot } from './components/ai/RagChatbot';
-import { Login } from './components/auth/Login';
 
 // Nav Section Views
 import { WorkersView } from './components/views/WorkersView';
@@ -36,7 +35,6 @@ import {
 import { BrainCircuit, Cpu, Layers } from 'lucide-react';
 
 export function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   // Navigation State
   const [currentSection, setCurrentSection] = useState<string>('overview');
   const [activeAITab, setActiveAITab] = useState<'multi-agent' | 'iot-command' | '3d-twin'>('multi-agent');
@@ -244,11 +242,6 @@ export function App() {
 
   const activeAlertCount = incidents.filter((i) => i.status === 'ACTIVE').length;
   const pendingActionsCount = actions.filter((a) => a.status === 'AWAITING_APPROVAL').length;
-
-  // Auth Guard
-  if (!isAuthenticated) {
-    return <Login onLogin={() => setIsAuthenticated(true)} />;
-  }
 
   return (
     <div className="h-screen w-screen flex flex-col bg-[#050914] text-slate-100 overflow-hidden font-sans">
